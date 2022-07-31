@@ -1,5 +1,6 @@
 // Assignment Code
 var generateBtn = document.querySelector("#generate");
+var copyBtn = document.querySelector("#copy");
 var passwordSettings = {
   passwordLength: 12,
   passwordLower: false,
@@ -8,13 +9,26 @@ var passwordSettings = {
   passwordSpecial: false
 };
 
+//var charLower
+
 // Write password to the #password input
 function writePassword() {
   var password = generatePassword();
   var passwordText = document.querySelector("#password");
 
+  copyBtn.disabled = false;
+
   passwordText.value = password;
 
+}
+
+function copyPassword() {
+  var copyPasswordText = document.querySelector("#password").innerHTML;
+  if (navigator && navigator.clipboard && navigator.clipboard.writeText) {
+    return navigator.clipboard.writeText(copyPasswordText);
+  } else {
+    return Promise.reject("This feature isn't working right now. Please select the password and copy it.")
+  };
 }
 
 function generatePassword() {
@@ -38,7 +52,7 @@ function getPasswordSettings() {
   setSpecial();
   
   validatePasswordSettings();
-
+  
   console.log("Finished generatePassword");
 }
 
@@ -67,9 +81,6 @@ function setLowercase() {
 function setUppercase() {
 
   passwordSettings.passwordUpper = confirm("Do you want to include uppercase letters?");
-
-  console.log(`passwordUpper is set to ` + passwordSettings.passwordUpper);
-  console.log(`passwordUpper typeof is ` + (typeof passwordSettings.passwordUpper));
 
   return passwordSettings.passwordUpper;
 }
@@ -106,10 +117,8 @@ function settingsReset() {
 function validatePasswordSettings() {
   let pwSettingsCounter = 0;
   for (property in passwordSettings) {
-    console.log(property + "has a type of " + (typeof (passwordSettings[property])) + " and has a value of " + passwordSettings[property]);
     if ((passwordSettings[property]) === true) {
       pwSettingsCounter++;
-      console.log(pwSettingsCounter);
     };
   };
 
@@ -125,4 +134,5 @@ function validatePasswordSettings() {
 
 // Add event listener to generate button
 generateBtn.addEventListener("click", writePassword);
+copyBtn.addEventListener("click", copyPassword)
 

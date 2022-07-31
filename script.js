@@ -1,21 +1,29 @@
 // Assignment Code
 var generateBtn = document.querySelector("#generate");
 var copyBtn = document.querySelector("#copy");
+var newPassword = "";
+
 var passwordSettings = {
-  passwordLength: 12,
+  passwordLength: 0,
   passwordLower: false,
   passwordUpper: false,
   passwordNumeric: false,
   passwordSpecial: false
 };
 
-//var charLower
+var CharSets = {
+  lowercase: "abcdefghijklmnopqrstuvwxyz",
+  uppercase: "ABCDEFGHIJKLMNOPQRSTUVWXYZ",
+  numeric: "0123456789",
+  special: "!\"#$%&'()*+,-./:;<=>?@[\]^_`{|}~"
+}
+
+var passwordCharacters = "";
 
 // Write password to the #password input
 function writePassword() {
   var password = generatePassword();
   var passwordText = document.querySelector("#password");
-
   copyBtn.disabled = false;
 
   passwordText.value = password;
@@ -23,8 +31,9 @@ function writePassword() {
 }
 
 function copyPassword() {
-  var copyPasswordText = document.querySelector("#password").innerHTML;
+  var copyPasswordText = newPassword;
   if (navigator && navigator.clipboard && navigator.clipboard.writeText) {
+    console.log(copyPasswordText);
     return navigator.clipboard.writeText(copyPasswordText);
   } else {
     return Promise.reject("This feature isn't working right now. Please select the password and copy it.")
@@ -33,8 +42,9 @@ function copyPassword() {
 
 function generatePassword() {
   getPasswordSettings();
+  characterRandomizer();
 
-  console.log("Your password settings passed validation. Need to implement actual password generation");
+  return newPassword;
 };
   
 // Get Password Settings
@@ -52,8 +62,8 @@ function getPasswordSettings() {
   setSpecial();
   
   validatePasswordSettings();
-  
-  console.log("Finished generatePassword");
+  console.log(passwordCharacters);
+  console.log("Finished getPasswordSettings");
 }
 
 
@@ -74,28 +84,36 @@ function setLength() {
 function setLowercase() {
 
   passwordSettings.passwordLower = confirm("Do you want to include lowercase letters?");
-  
+  if (passwordSettings.passwordLower) {
+    passwordCharacters += CharSets.lowercase;
+  }
   return passwordSettings.passwordLower;
 }
 
 function setUppercase() {
 
   passwordSettings.passwordUpper = confirm("Do you want to include uppercase letters?");
-
+  if (passwordSettings.passwordUpper) {
+    passwordCharacters += CharSets.uppercase;
+  }
   return passwordSettings.passwordUpper;
 }
 
 function setNumeric() {
 
   passwordSettings.passwordNumeric = confirm("Do you want to include numbers?");
-
+  if (passwordSettings.passwordNumeric) {
+    passwordCharacters += CharSets.numeric;
+  }
   return passwordSettings.passwordNumeric;
 }
 
 function setSpecial() {
 
   passwordSettings.passwordSpecial = confirm("Do you want to include special characters?");
-
+  if (passwordSettings.passwordSpecial) {
+    passwordCharacters += CharSets.special;
+  }
   return passwordSettings.passwordSpecial;
 }
 
@@ -112,7 +130,19 @@ function settingsReset() {
   console.log("Reset all user choices.")
 };
 
-// Validate Password Parameters - 2 or more character groups must be chosen
+// Create Randomized String for Password
+function characterRandomizer() {
+  let pwMin = 0;
+  let pwMax = (passwordCharacters.length)++;
+  
+  for (i = 0; i < passwordSettings.passwordLength; i++) {
+    newPassword += passwordCharacters[Math.floor(Math.random() * (pwMax - pwMin) + pwMin)];
+    console.log(newPassword);
+  }
+  
+}
+
+// Validate Password Parameters - 2 or more character sets must be chosen
 
 function validatePasswordSettings() {
   let pwSettingsCounter = 0;
@@ -131,6 +161,7 @@ function validatePasswordSettings() {
   }
   return;
 };
+
 
 // Add event listener to generate button
 generateBtn.addEventListener("click", writePassword);

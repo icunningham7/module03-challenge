@@ -19,18 +19,25 @@ function generatePassword() {
 
   //Get Length for the Password
   getPasswordLength();
-  while (!passwordRequirements >= 8 && !passwordRequirements <= 128) {
-    
-    alert("Please enter a valid number between 8 and 128");
-    getPasswordLength();
-  }
+  
+
+  console.log("Finished generatePassword");
 }
 
 // Get Password Requirements
 
 function getPasswordLength() {
+  
   console.log("Ran getPasswordLength");
-  passwordRequirements.passwordLength  = prompt("Password length (8-128 characters", 12);
+
+  let pwLength = prompt("Password length (8-128 characters)", 12);
+
+  while (!(pwLength >= 8 && pwLength <= 128)) {
+    console.log("Invalid Password Length");
+    alert("Please enter a valid number between 8 and 128");
+    pwLength = prompt("Password length (8-128 characters)", 12);
+  };
+  passwordRequirements.passwordLength = pwLength;
   return passwordRequirements.passwordLength;
 }
 // Add event listener to generate button

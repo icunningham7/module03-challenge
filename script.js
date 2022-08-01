@@ -152,7 +152,7 @@ function validatePasswordSettings() {
 
   if (pwSettingsCounter < 1) {
     alert("Please select 1 or more character sets.");
-    // generatePassword();
+    getPasswordSettings();
   } else {
     return;
   }
